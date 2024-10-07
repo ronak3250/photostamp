@@ -2,6 +2,12 @@
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:screenshot/screenshot.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
+import 'package:open_file/open_file.dart';
+import 'dart:io';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -12,6 +18,9 @@ import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:mime/mime.dart';
 
 import '../utils/pixel_transparent_painter.dart';
+import 'package:screenshot/screenshot.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class PreviewImgPage extends StatefulWidget {
   final Uint8List imgBytes;
@@ -46,6 +55,7 @@ class _PreviewImgPageState extends State<PreviewImgPage> {
   late Uint8List _imageBytes;
 
   final _numberFormatter = NumberFormat();
+  final ScreenshotController _screenshotController = ScreenshotController();
 
   @override
   void initState() {
@@ -65,6 +75,109 @@ class _PreviewImgPageState extends State<PreviewImgPage> {
     var i = (log(bytes) / log(1024)).floor();
     var size = bytes / pow(1024, i);
     return '${size.toStringAsFixed(decimals)} ${suffixes[i]}';
+  }
+  // Future<void> _takeScreenshot() async {
+  //   // Step 1: Capture the screenshot
+  //   Uint8List? screenshotImage = await _screenshotController.capture();
+  //
+  //   if (screenshotImage == null) {
+  //     // Handle case where screenshot failed
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Failed to capture screenshot')),
+  //     );
+  //     return;
+  //   }
+  //
+  //   // Step 2: Use FilePicker to let the user select a folder
+  //   String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+  //
+  //   if (selectedDirectory == null) {
+  //     // User canceled the folder selection
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Folder selection canceled')),
+  //     );
+  //     return;
+  //   }
+  //
+  //   // Step 3: Save the screenshot in the chosen directory
+  //   String fileName = 'screenshot_${DateTime.now().millisecondsSinceEpoch}.png';
+  //   String filePath = path.join(selectedDirectory, fileName);
+  //
+  //   // Create a file and write the screenshot bytes to it
+  //   File file = File(filePath);
+  //   await file.writeAsBytes(screenshotImage);
+  //
+  //   // Notify the user that the screenshot has been saved
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(content: Text('Screenshot saved at $filePath')),
+  //   );
+  //
+  //   // Step 4: Open the saved screenshot
+  //   OpenFile.open(filePath);
+  // }
+
+  // Future<void> _takeScreenshot() async {
+  //       final directory = await getApplicationDocumentsDirectory();
+  //       final path = '${directory.path}/preview_image.png';
+  //
+  //       _screenshotController.capture().then((Uint8List? image) async {
+  //         if (image != null) {
+  //           final file = File(path);
+  //           await file.writeAsBytes(image);
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(content: Text('Screenshot saved at $path')),
+  //           );
+  //         }
+  //       }).catchError((onError) {
+  //         print(onError);
+  //       });
+  //     }
+
+  Future<void> _takeScreenshot() async {
+    try {
+      // Step 1: Capture the screenshot
+      Uint8List? screenshotImage = await _screenshotController.capture();
+
+      if (screenshotImage == null) {
+        // Handle case where screenshot failed
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to capture screenshot')),
+        );
+        return;
+      }
+
+      // Step 2: Get the internal storage directory (for Android devices)
+      final directory = await getExternalStorageDirectory();
+
+      if (directory == null) {
+        // Handle case where directory is not accessible
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not access internal storage')),
+        );
+        return;
+      }
+
+      // Step 3: Create a file path in the internal storage directory
+      String fileName = 'edited_image_${DateTime.now().millisecondsSinceEpoch}.png';
+      String filePath = path.join(directory.path, fileName);
+
+      // Step 4: Save the screenshot to the internal storage
+      File file = File(filePath);
+      await file.writeAsBytes(screenshotImage);
+
+      // Step 5: Notify the user that the screenshot has been saved
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Screenshot saved at $filePath')),
+      );
+
+      // Step 6: Optionally, open the saved image
+      OpenFile.open(filePath);
+    } catch (e) {
+      // Handle any errors during the saving process
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving screenshot: $e')),
+      );
+    }
   }
 
   @override
@@ -99,6 +212,14 @@ class _PreviewImgPageState extends State<PreviewImgPage> {
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Result'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.camera),
+                onPressed:() {
+                  _takeScreenshot();
+                },
+              ),
+            ],
           ),
           body: CustomPaint(
             painter: const PixelTransparentPainter(
@@ -124,17 +245,32 @@ class _PreviewImgPageState extends State<PreviewImgPage> {
       );
     });
   }
-
   Widget _buildFinalImage({Uint8List? bytes}) {
-    return InteractiveViewer(
-      maxScale: 7,
-      minScale: 1,
-      child: Image.memory(
-        bytes ?? _imageBytes,
-        fit: BoxFit.contain,
+    return Screenshot(
+      controller: _screenshotController,
+      child: InteractiveViewer(
+        maxScale: 7,
+        minScale: 1,
+        child: Image.memory(
+          bytes ?? _imageBytes,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
+
+
+  // Widget _buildFinalImage({Uint8List? bytes}) {
+  //   return InteractiveViewer(
+  //     maxScale: 7,
+  //     minScale: 1,
+  //     child: Image.memory(
+  //       bytes ?? _imageBytes,
+  //       fit: BoxFit.contain,
+  //     ),
+  //   );
+  // }
+
 
   Widget _buildGenerationInfos() {
     TableRow tableSpace = const TableRow(
