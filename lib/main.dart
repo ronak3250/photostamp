@@ -1,314 +1,12 @@
-// // import 'package:flutter/gestures.dart';
-// // import 'package:flutter/material.dart';
-// // import 'package:flutter/services.dart';
-// // import 'package:pro_image_editor/widgets/extended/extended_pop_scope.dart';
-// // import 'package:proeditors/pages/pick_image_example.dart';
-// // import 'package:proeditors/utils/example_constants.dart';
-// // import 'package:url_launcher/url_launcher.dart';
-// //
-// // void main() async {
-// //   WidgetsFlutterBinding.ensureInitialized();
-// //
-// //
-// //   runApp(const MyApp());
-// // }
-// //
-// // class MyApp extends StatelessWidget {
-// //   const MyApp({super.key});
-// //
-// //   // This widget is the root of your application.
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return MaterialApp(
-// //       title: 'Pro-Image-Editor',
-// //       theme: ThemeData(
-// //         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade800),
-// //         useMaterial3: true,
-// //       ),
-// //       debugShowCheckedModeBanner: false,
-// //       home: const MyHomePage(),
-// //     );
-// //   }
-// // }
-// //
-// // class MyHomePage extends StatefulWidget {
-// //   const MyHomePage({super.key});
-// //
-// //   @override
-// //   State<MyHomePage> createState() => _MyHomePageState();
-// // }
-// //
-// // class _MyHomePageState extends State<MyHomePage> {
-// //   late final ScrollController _scrollCtrl;
-// //
-// //   final List<Widget> _examples = [
-// //     // const DefaultExample(),
-// //     // const DesignExample(),
-// //     // const StandaloneExample(),
-// //     // const CropToMainEditorExample(),
-// //     // const SignatureDrawingExample(),
-// //     // const StickersExample(),
-// //     // const FirebaseSupabaseExample(),
-// //     // const ReorderLayerExample(),
-// //     // const RoundCropperExample(),
-// //     // const SelectableLayerExample(),
-// //     // const GenerationConfigsExample(),
-// //     const PickImageExample(),
-// //     // const GoogleFontExample(),
-// //     // const CustomAppbarBottombarExample(),
-// //     // const ImportExportExample(),
-// //     // const MoveableBackgroundImageExample(),
-// //     // const ZoomMoveEditorExample(),
-// //     // const ImageFormatConvertExample(),
-// //   ];
-// //
-// //   @override
-// //   void initState() {
-// //     _scrollCtrl = ScrollController();
-// //     super.initState();
-// //   }
-// //
-// //   @override
-// //   void dispose() {
-// //     _scrollCtrl.dispose();
-// //     super.dispose();
-// //   }
-// //
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return ExampleConstants(
-// //       child: AnnotatedRegion<SystemUiOverlayStyle>(
-// //         value: SystemUiOverlayStyle.dark,
-// //         child: ExtendedPopScope(
-// //           child: Scaffold(
-// //             body: SafeArea(child: _buildCard()),
-// //           ),
-// //         ),
-// //       ),
-// //     );
-// //   }
-// //
-// //   Widget _buildCard() {
-// //     return Center(
-// //       child: LayoutBuilder(builder: (context, constraints) {
-// //         if (constraints.maxWidth >= 750) {
-// //           return Container(
-// //             constraints: const BoxConstraints(maxWidth: 700),
-// //             child: Card.outlined(
-// //               margin: const EdgeInsets.all(16),
-// //               clipBehavior: Clip.hardEdge,
-// //               child: _buildExamples(),
-// //             ),
-// //           );
-// //         } else {
-// //           return _buildExamples();
-// //         }
-// //       }),
-// //     );
-// //   }
-// //
-// //   Widget _buildExamples() {
-// //     return Column(
-// //       mainAxisSize: MainAxisSize.min,
-// //       children: [
-// //
-// //
-// //         const Divider(height: 1),
-// //         Flexible(
-// //           child: Scrollbar(
-// //             controller: _scrollCtrl,
-// //             thumbVisibility: true,
-// //             trackVisibility: true,
-// //             child: SingleChildScrollView(
-// //               controller: _scrollCtrl,
-// //               child: Column(
-// //                 crossAxisAlignment: CrossAxisAlignment.start,
-// //                 mainAxisSize: MainAxisSize.min,
-// //                 children: ListTile.divideTiles(
-// //                   context: context,
-// //                   tiles: _examples,
-// //                 ).toList(),
-// //               ),
-// //             ),
-// //           ),
-// //         ),
-// //       ],
-// //     );
-// //   }
-// // }
-//
-//
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:pro_image_editor/widgets/extended/extended_pop_scope.dart';
-// import 'package:proeditors/pages/pick_image_example.dart';
-// import 'package:proeditors/utils/example_constants.dart';
-// import 'package:geolocator/geolocator.dart'; // Import geolocator
-//
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   runApp(const MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Pro-Image-Editor',
-//       theme: ThemeData(
-//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade800),
-//         useMaterial3: true,
-//       ),
-//       debugShowCheckedModeBanner: false,
-//       home: const MyHomePage(),
-//     );
-//   }
-// }
-//
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({super.key});
-//
-//   @override
-//   State<MyHomePage> createState() => _MyHomePageState();
-// }
-//
-// class _MyHomePageState extends State<MyHomePage> {
-//   late final ScrollController _scrollCtrl;
-//   String _locationMessage = "Requesting location permission...";
-//
-//   final List<Widget> _examples = [
-//     const PickImageExample(),
-//   ];
-//
-//   @override
-//   void initState() {
-//     _scrollCtrl = ScrollController();
-//     super.initState();
-//     _initLocationService(); // Request location on startup
-//   }
-//
-//   @override
-//   void dispose() {
-//     _scrollCtrl.dispose();
-//     super.dispose();
-//   }
-//
-//   Future<void> _initLocationService() async {
-//     try {
-//       Position position = await _determinePosition();
-//       setState(() {
-//         _locationMessage = 'Position: ${position.latitude}, ${position.longitude}';
-//       });
-//     } catch (e) {
-//       setState(() {
-//         _locationMessage = 'Error: $e';
-//       });
-//     }
-//   }
-//
-//   Future<Position> _determinePosition() async {
-//     bool serviceEnabled;
-//     LocationPermission permission;
-//
-//     // Test if location services are enabled.
-//     serviceEnabled = await Geolocator.isLocationServiceEnabled();
-//     if (!serviceEnabled) {
-//       return Future.error('Location services are disabled.');
-//     }
-//
-//     permission = await Geolocator.checkPermission();
-//     if (permission == LocationPermission.denied) {
-//       permission = await Geolocator.requestPermission();
-//       if (permission == LocationPermission.denied) {
-//         return Future.error('Location permissions are denied');
-//       }
-//     }
-//
-//     if (permission == LocationPermission.deniedForever) {
-//       return Future.error('Location permissions are permanently denied.');
-//     }
-//
-//     return await Geolocator.getCurrentPosition();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ExampleConstants(
-//       child: AnnotatedRegion<SystemUiOverlayStyle>(
-//         value: SystemUiOverlayStyle.dark,
-//         child: ExtendedPopScope(
-//           child: Scaffold(
-//             body: SafeArea(
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   Text(_locationMessage), // Display location or error message
-//                   _buildCard(),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildCard() {
-//     return Center(
-//       child: LayoutBuilder(builder: (context, constraints) {
-//         if (constraints.maxWidth >= 750) {
-//           return Container(
-//             constraints: const BoxConstraints(maxWidth: 700),
-//             child: Card.outlined(
-//               margin: const EdgeInsets.all(16),
-//               clipBehavior: Clip.hardEdge,
-//               child: _buildExamples(),
-//             ),
-//           );
-//         } else {
-//           return _buildExamples();
-//         }
-//       }),
-//     );
-//   }
-//
-//   Widget _buildExamples() {
-//     return Column(
-//       mainAxisSize: MainAxisSize.min,
-//       children: [
-//         const Divider(height: 1),
-//         Flexible(
-//           child: Scrollbar(
-//             controller: _scrollCtrl,
-//             thumbVisibility: true,
-//             trackVisibility: true,
-//             child: SingleChildScrollView(
-//               controller: _scrollCtrl,
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 mainAxisSize: MainAxisSize.min,
-//                 children: ListTile.divideTiles(
-//                   context: context,
-//                   tiles: _examples,
-//                 ).toList(),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-//
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart'; // Import geolocator for location services
+import 'package:geolocator/geolocator.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pro_image_editor/widgets/extended/extended_pop_scope.dart';
 import 'package:proeditors/pages/pick_image_example.dart';
 import 'package:proeditors/utils/example_constants.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -321,10 +19,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pro-Image-Editor',
+      title: 'Image Stamper',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade800),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF6200EE),
+          secondary: const Color(0xFFFF9800),
+          tertiary: const Color(0xFF03DAC6),
+        ),
         useMaterial3: true,
+        textTheme: GoogleFonts.poppinsTextTheme(),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF6200EE),
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+        cardTheme: CardTheme(
+          elevation: 8,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
@@ -339,72 +52,80 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   late final ScrollController _scrollCtrl;
   String _locationMessage = "Requesting location permission...";
+  bool _isLoading = true;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
 
-  final List<Widget> _examples = [
-    const PickImageExample(),
-  ];
+
 
   @override
   void initState() {
-    _scrollCtrl = ScrollController();
     super.initState();
-    _requestLocationPermission(); // Request location permission when app starts
+    _scrollCtrl = ScrollController();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+    _fadeAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _requestLocationPermission();
   }
 
   @override
   void dispose() {
     _scrollCtrl.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
-  // Request location permission and handle location services
   Future<void> _requestLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
       permission = await Geolocator.requestPermission();
     }
 
-    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
-      // Permission granted, now check if location services are enabled
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
       _checkLocationServices();
     } else {
-      // Permission denied
       setState(() {
         _locationMessage = 'Location permissions are denied.';
+        _isLoading = false;
       });
     }
+    _animationController.forward();
   }
 
-  // Check if location services are enabled and prompt the user if necessary
   Future<void> _checkLocationServices() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled, prompt the user to enable them
       _showEnableLocationDialog();
     } else {
-      // Location services are enabled, get the location
       _getCurrentLocation();
     }
   }
 
-  // Get the current location if permission is granted and services are enabled
   Future<void> _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition();
       setState(() {
-        _locationMessage = 'Position: ${position.latitude}, ${position.longitude}';
+        _locationMessage =
+            'Lat: ${position.latitude.toStringAsFixed(4)}, Long: ${position.longitude.toStringAsFixed(4)}';
+        _isLoading = false;
       });
     } catch (e) {
       setState(() {
         _locationMessage = 'Error: $e';
+        _isLoading = false;
       });
     }
   }
 
-  // Show a dialog to the user asking to enable location services
   void _showEnableLocationDialog() {
     showDialog(
       context: context,
@@ -414,9 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           TextButton(
             onPressed: () async {
-              await Geolocator.openLocationSettings(); // Open location settings for the user to enable location services
+              await Geolocator.openLocationSettings();
               Navigator.of(context).pop();
-              _checkLocationServices(); // Recheck location services after the user returns
+              _checkLocationServices();
             },
             child: const Text('Enable'),
           ),
@@ -429,67 +150,53 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return ExampleConstants(
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
+        value: SystemUiOverlayStyle.light,
         child: ExtendedPopScope(
           child: Scaffold(
-            body: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(_locationMessage), // Display location or error message
-                  _buildCard(),
-                ],
-              ),
+            appBar: AppBar(
+              title: Text('Image Stamper',
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+              actions: [
+                // IconButton(
+                //   icon: const Icon(Icons.info_outline),
+                //   onPressed: () {
+                //     // TODO: Implement info action
+                //   },
+                // ),
+              ],
             ),
+            body: _isLoading ? _buildLoadingIndicator() : PickImageExample(),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCard() {
+  Widget _buildLoadingIndicator() {
     return Center(
-      child: LayoutBuilder(builder: (context, constraints) {
-        if (constraints.maxWidth >= 750) {
-          return Container(
-            constraints: const BoxConstraints(maxWidth: 700),
-            child: Card.outlined(
-              margin: const EdgeInsets.all(16),
-              clipBehavior: Clip.hardEdge,
-              child: _buildExamples(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.network(
+            'https://assets5.lottiefiles.com/packages/lf20_usmfx6bp.json',
+            width: 200,
+            height: 200,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Getting things ready...',
+            style: GoogleFonts.poppins(
+              textStyle: Theme.of(context).textTheme.titleMedium,
+              fontWeight: FontWeight.w600,
             ),
-          );
-        } else {
-          return _buildExamples();
-        }
-      }),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildExamples() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Divider(height: 1),
-        Flexible(
-          child: Scrollbar(
-            controller: _scrollCtrl,
-            thumbVisibility: true,
-            trackVisibility: true,
-            child: SingleChildScrollView(
-              controller: _scrollCtrl,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: ListTile.divideTiles(
-                  context: context,
-                  tiles: _examples,
-                ).toList(),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+
+
+
+
 }
